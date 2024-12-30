@@ -4,7 +4,6 @@ public class GarbageController : MonoBehaviour
 {
     public static GarbageController Instance;
 
-    //[SerializeField] private int garbageInTruck;
     [SerializeField] private int processedGarbage;
 
     private void Awake()
@@ -19,7 +18,6 @@ public class GarbageController : MonoBehaviour
     {
         Debug.Log("Destroyed");
         Destroy(garbage);
-        //garbageInTruck++;
         GameManager.Instance.AddGarbage(1);
     }
 
@@ -29,6 +27,6 @@ public class GarbageController : MonoBehaviour
         int moneyEarned = garbageInTruck * 10;
         GameManager.Instance.AddMoney(moneyEarned);
         garbageInTruck = 0;
-        Debug.Log($"Processed Garbage: {processedGarbage}, Money Earned: {moneyEarned}");
+        Debug.Log("Processed Garbage: "+processedGarbage+", Money Earned: "+moneyEarned);
     }
 }

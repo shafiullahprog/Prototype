@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GarbageStatus : MonoBehaviour
+public class GarbageStatus : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private List<GameObject> garbagePresent = new List<GameObject>();
     public List<GameObject> GetTotalGarbagePresent()
@@ -19,11 +19,9 @@ public class GarbageStatus : MonoBehaviour
         if (other.CompareTag("Truck"))
         {
             TruckController truckController = other.GetComponent<TruckController>();
-
             if (truckController!=null && !truckController.IsTruckFull)
             {
                 truckController.OnGarbageCollect += Collected;
-                //Debug.Log(other.gameObject.name);
             }
         }
     }
@@ -39,16 +37,29 @@ public class GarbageStatus : MonoBehaviour
             }
         }
     }
-    
 
     public void Collected(int index) 
     {
-        /*for (int i = 0; i < garbagePresent.Count; i++)
-        {
-             GarbageController.Instance.CollectGarbage(garbagePresent[i]);
-        }*/
         GarbageController.Instance.CollectGarbage(garbagePresent[index]);
         garbagePresent.Remove(garbagePresent[index]);
+    }
+
+    public void LoadData(GameData gameData)
+    {
+
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        //data.RemainingGarbagePositions.Clear();
+        foreach (GameObject garbage in garbagePresent)
+        {
+            if (garbage != null)
+            {
+                data.RemainingGarbagePositions.Add(garbage.transform.position);
+            }
+            Debug.Log("Save remaining garbage " + data.RemainingGarbagePositions[0]); 
+        }
     }
 }
 

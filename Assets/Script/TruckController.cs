@@ -53,7 +53,6 @@ public class TruckController : MonoBehaviour
                 {
                     index = 0;
                 }
-                //Debug.Log("Current Index: "+ index);
             }
         }
     }
@@ -73,12 +72,12 @@ public class TruckController : MonoBehaviour
             GarbageStatus garbage = other.GetComponentInParent<GarbageStatus>();
             if (garbage.GetTotalGarbagePresent().Count > 0)
             {
-                IgarbageCollected = garbage.GetTotalGarbagePresent().Count;
+                IgarbageCollected = 1;
                 OnGarbageCollect?.Invoke(0);
                 HaltTruck(true, false);
             }
         }
-        else if (other.CompareTag("Factory"))
+        else if (other.CompareTag("Factory") && IsTruckFull)
         {
             GarbageController.Instance.DeliverGarbage(IgarbageCollected);
             IgarbageCollected = 0;

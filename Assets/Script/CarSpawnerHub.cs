@@ -12,7 +12,6 @@ public class CarSpawnerHub : MonoBehaviour
             TruckController truckController = other.gameObject.GetComponent<TruckController>();
             truckController.ResetTruckMode();
             truckController.gameObject.SetActive(false);
-            //other.gameObject.SetActive(false);
         }
     }
 }

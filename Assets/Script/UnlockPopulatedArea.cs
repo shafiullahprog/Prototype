@@ -12,9 +12,12 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
     Button button;
     public Button childButton => button;
     [SerializeField] private bool isUnlocked = false;
+    bool IsFactoryVisible = false;  
 
     [SerializeField] string lockValue = "Lock";
     [SerializeField] string unlockValue = "Unlock";
+
+    GameData gameData;
 
     private void Awake()
     {
@@ -43,7 +46,7 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
             GameManager.Instance.UpdateMoney();
             
             if (objectToEnable != null)
-                objectToEnable.SetActive(true);
+                objectToEnable.SetActive(isUnlocked);
         }
         else
         {
@@ -67,6 +70,7 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
     }
     public void LoadData(GameData data)
     {
+        gameData = data;
         Initialization();
 
         foreach (KeyValuePair<GameObject, bool> isCityUnlock in data.IsCityLocked)
@@ -84,6 +88,9 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
             {
                 cityCollider.enabled = isUnlocked;
                 canvasObject.SetActive(!isUnlocked);
+                
+                if (objectToEnable != null)
+                    objectToEnable.SetActive(!isUnlocked);
             }
         }
     }
@@ -92,7 +99,10 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
     {
         button = canvasObject.GetComponentInChildren<Button>();
         GameManager.Instance.OnMoneyCollectedUpdated.AddListener(CheckUnlockCondition);
-        button.onClick.AddListener(UnlockCity);
+        button.onClick.AddListener(() => 
+        {
+            UnlockCity();
+        });
     }
 
     public void SaveData(ref GameData data)

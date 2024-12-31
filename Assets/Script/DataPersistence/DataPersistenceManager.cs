@@ -158,8 +158,7 @@ public class DataPersistenceManager : MonoBehaviour
 
         // pass the data to other scripts so they can update it
         foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects) 
-        {
-            
+        { 
             dataPersistenceObj.SaveData(ref gameData);
         }
 
@@ -173,6 +172,8 @@ public class DataPersistenceManager : MonoBehaviour
 
     private void OnApplicationQuit() 
     {
+        gameData.IsCityLocked.Clear();
+        gameData.RemainingGarbagePositions.Clear();
         SaveGame();
     }
 

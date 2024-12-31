@@ -4,43 +4,45 @@ using UnityEngine;
 
 public class GarbageSpawner : MonoBehaviour, IDataPersistence
 {
+    [SerializeField] GarbageStatus garbageStatus;
     public GameObject garbagePrefab;
     public Transform[] spawnPoints;
+    private void Start()
+    {
+        garbageStatus = GetComponent<GarbageStatus>();
+    }
 
-    private List<GameObject> activeGarbage = new List<GameObject>();
-
-   
     public void SpawnGarbage()
     {
         foreach (Transform spawnPoint in spawnPoints)
         {
             GameObject garbage = Instantiate(garbagePrefab, spawnPoint.position, Quaternion.identity);
-            activeGarbage.Add(garbage);
+            if(garbageStatus !=null)
+                garbageStatus.garbagePresent.Add(garbage);
         }
     }
 
     public void LoadData(GameData data)
     {
         Debug.Log("Remaining data: "+ data.RemainingGarbagePositions.Count);
-        foreach (GameObject garbage in activeGarbage)
-        {
-            if (garbage != null)
-            {
-                Destroy(garbage);
-            }
-        }
-        activeGarbage.Clear();
         if (data.RemainingGarbagePositions.Count == 0)
         {
+            Debug.Log("New garbage spawn");
             SpawnGarbage();
         }
         else
         {
-            // Load garbage positions from saved data
-            foreach (Vector3 position in data.RemainingGarbagePositions)
+            foreach(KeyValuePair<Vector3, GameObject> entry in data.RemainingGarbagePositions)
             {
-                GameObject garbage = Instantiate(garbagePrefab, position, Quaternion.identity);
-                activeGarbage.Add(garbage);
+                Vector3 garbagePos = entry.Key;
+                GameObject garbageParent = entry.Value;
+
+                if (garbageParent == gameObject)
+                {
+                    GameObject garbageToSpawn = Instantiate(garbagePrefab, garbagePos, Quaternion.identity);
+                    if (garbageStatus != null)
+                        garbageStatus.garbagePresent.Add(garbageToSpawn);
+                }
             }
         }
     }

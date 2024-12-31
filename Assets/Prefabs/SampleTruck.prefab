@@ -28,6 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53097602907149886}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 17.85, y: 0, z: 13.59}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
@@ -35,7 +36,6 @@ Transform:
   m_Children:
   - {fileID: 9113762531880264272}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!33 &2013668956247657753
 MeshFilter:
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints: []
   GarbageAppartmentName: TruckStop
-  speed: 5
+  speed: 2
   IgarbageCollected: 0
   IsMoving: 0
   IsTruckFull: 0
@@ -178,13 +178,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9113762531880173168}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3715277572229503583}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9113762531876840048
 MeshFilter:

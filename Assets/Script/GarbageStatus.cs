@@ -4,18 +4,14 @@ using UnityEngine.Events;
 
 public class GarbageStatus : MonoBehaviour, IDataPersistence
 {
-    [SerializeField] private List<GameObject> garbagePresent = new List<GameObject>();
+    GameData gameData;
+    public List<GameObject> garbagePresent = new List<GameObject>();
     public List<GameObject> GetTotalGarbagePresent()
     {
         return garbagePresent;
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Garbage"))
-        {
-            garbagePresent.Add(other.gameObject);
-        }
-
         if (other.CompareTag("Truck"))
         {
             TruckController truckController = other.GetComponent<TruckController>();
@@ -46,19 +42,20 @@ public class GarbageStatus : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData gameData)
     {
-
+        this.gameData = gameData;
     }
 
     public void SaveData(ref GameData data)
     {
+        Debug.Log("Save garbage data");
         //data.RemainingGarbagePositions.Clear();
         foreach (GameObject garbage in garbagePresent)
         {
-            if (garbage != null)
+            if (garbage != null && !data.RemainingGarbagePositions.ContainsKey(garbage.transform.position))
             {
-                data.RemainingGarbagePositions.Add(garbage.transform.position);
+                Debug.Log("Garbage parent: "+ gameObject.name);
+                data.RemainingGarbagePositions.Add(garbage.transform.position, gameObject);
             }
-            Debug.Log("Save remaining garbage " + data.RemainingGarbagePositions[0]); 
         }
     }
 }

@@ -9,12 +9,15 @@ public class GameData
 
     public int GarbageCollected;
     public int Money;
-    public List<Vector3> RemainingGarbagePositions;
+
+    public SerializableDictionary<GameObject, bool> IsCityLocked;
+    public SerializableDictionary<Vector3, GameObject> RemainingGarbagePositions;
 
     public GameData() 
     {
         this.GarbageCollected = 0;
         this.Money = 0;
-        RemainingGarbagePositions = new List<Vector3>();
+        IsCityLocked = new SerializableDictionary<GameObject, bool>();
+        RemainingGarbagePositions = new SerializableDictionary<Vector3, GameObject>();
     }
 }

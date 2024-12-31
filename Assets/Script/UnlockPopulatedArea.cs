@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UnlockPopulatedArea : MonoBehaviour
+public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
 {
     [SerializeField] private int unlockPoints = 50;
     [SerializeField] private BoxCollider cityCollider;
@@ -15,18 +16,12 @@ public class UnlockPopulatedArea : MonoBehaviour
     [SerializeField] string lockValue = "Lock";
     [SerializeField] string unlockValue = "Unlock";
 
-    private void Start()
+    private void Awake()
     {
         if (cityCollider == null)
         {
             cityCollider = GetComponent<BoxCollider>();
         }
-        LockCity();
-        GameManager.Instance.OnMoneyCollectedUpdated.AddListener(CheckUnlockCondition);
-
-        button = canvasObject.GetComponentInChildren<Button>();
-        button.interactable = isUnlocked;
-        button.onClick.AddListener(UnlockCity);
     }
 
     private void LockCity()
@@ -41,11 +36,12 @@ public class UnlockPopulatedArea : MonoBehaviour
         if (GameManager.Instance.Money >= unlockPoints)
         {
             isUnlocked = true;
-            cityCollider.enabled = true;
-            canvasObject.SetActive(false);
+            cityCollider.enabled = isUnlocked;
+            canvasObject.SetActive(!isUnlocked);
 
             GameManager.Instance.Money -= unlockPoints;
             GameManager.Instance.UpdateMoney();
+            
             if (objectToEnable != null)
                 objectToEnable.SetActive(true);
         }
@@ -54,7 +50,7 @@ public class UnlockPopulatedArea : MonoBehaviour
             Debug.Log("Insufficient Points");
         }
     }
-    
+
     private void CheckUnlockCondition(int moneyEarned)
     {
         if (!isUnlocked && moneyEarned >= unlockPoints)
@@ -68,5 +64,40 @@ public class UnlockPopulatedArea : MonoBehaviour
             button.interactable = false;
             button.GetComponentInChildren<TextMeshProUGUI>().text = lockValue;
         }
+    }
+    public void LoadData(GameData data)
+    {
+        Initialization();
+
+        foreach (KeyValuePair<GameObject, bool> isCityUnlock in data.IsCityLocked)
+        {
+            GameObject referenceGameObject = isCityUnlock.Key;
+            bool boolVal = isCityUnlock.Value;
+            
+            if (referenceGameObject == gameObject)
+            {
+                isUnlocked = boolVal;
+                LockCity();
+                button.interactable = isUnlocked;
+            }
+            else
+            {
+                cityCollider.enabled = isUnlocked;
+                canvasObject.SetActive(!isUnlocked);
+            }
+        }
+    }
+
+    private void Initialization()
+    {
+        button = canvasObject.GetComponentInChildren<Button>();
+        GameManager.Instance.OnMoneyCollectedUpdated.AddListener(CheckUnlockCondition);
+        button.onClick.AddListener(UnlockCity);
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        if(!data.IsCityLocked.ContainsKey(gameObject))
+            data.IsCityLocked.Add(gameObject, isUnlocked);
     }
 }

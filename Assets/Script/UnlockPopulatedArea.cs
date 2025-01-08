@@ -12,7 +12,6 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
     Button button;
     public Button childButton => button;
     [SerializeField] private bool isUnlocked = false;
-    bool IsFactoryVisible = false;  
 
     [SerializeField] string lockValue = "Lock";
     [SerializeField] string unlockValue = "Unlock";

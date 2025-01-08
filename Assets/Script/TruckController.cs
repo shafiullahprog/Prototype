@@ -10,6 +10,7 @@ public class TruckController : MonoBehaviour
 
     [SerializeField] List<GameObject> waypoints = new List<GameObject>();
     [SerializeField] string GarbageAppartmentName = "TruckStop";
+    [SerializeField] string truckPathParentName = "TruckPath";
     [SerializeField] private float speed = 1;
 
     int index = 0;
@@ -21,7 +22,7 @@ public class TruckController : MonoBehaviour
     public void Start()
     {
         initialPos = transform.position;
-        wayPointsParent = GameObject.Find("TruckPath").transform;
+        wayPointsParent = GameObject.Find(truckPathParentName).transform;
         if (wayPointsParent != null)
         {
             foreach (Transform t in wayPointsParent)
@@ -33,6 +34,7 @@ public class TruckController : MonoBehaviour
     private void Update()
     {
         MoveOnWayPoint();
+        CheckRaycast();
     }
     private void MoveOnWayPoint()
     {
@@ -54,6 +56,24 @@ public class TruckController : MonoBehaviour
                     index = 0;
                 }
             }
+        }
+    }
+
+    [SerializeField] LayerMask vehicleLayerMask;
+    [SerializeField] float range = 2;
+    private void CheckRaycast()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, range, vehicleLayerMask))
+        {
+            Debug.Log("Hit something"+ hit.transform.name);
+            Debug.DrawRay(transform.position, transform.forward * range, Color.red);
+            IsMoving = false;
+        }
+        else
+        {
+            if(!IsMoving)
+                IsMoving = true;
         }
     }
 
@@ -84,7 +104,6 @@ public class TruckController : MonoBehaviour
             HaltTruck(false, false);
         }
     }
-
     private void HaltTruck(bool val1, bool val2)
     {
         IsTruckFull = val1;

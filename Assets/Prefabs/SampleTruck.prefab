@@ -101,10 +101,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints: []
   GarbageAppartmentName: TruckStop
-  speed: 2
+  speed: 5
   IgarbageCollected: 0
   IsMoving: 0
   IsTruckFull: 0
+  vehicleLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!65 &129402997678178785
 BoxCollider:
   m_ObjectHideFlags: 0

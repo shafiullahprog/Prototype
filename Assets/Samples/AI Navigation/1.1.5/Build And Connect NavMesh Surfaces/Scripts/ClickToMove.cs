@@ -23,7 +23,7 @@ namespace Unity.AI.Navigation.Samples
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray.origin, ray.direction, out m_HitInfo))
-                    m_Agent.destination  = m_HitInfo.point;
+                    m_Agent.destination = m_HitInfo.point;
             }
         }
     }

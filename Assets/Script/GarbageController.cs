@@ -17,7 +17,7 @@ public class GarbageController : MonoBehaviour
     public void CollectGarbage(GameObject garbage)
     {
         Debug.Log("Destroyed");
-        Destroy(garbage);
+        //Destroy(garbage);
         GameManager.Instance.AddGarbage(1);
     }
 

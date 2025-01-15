@@ -67,6 +67,16 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
             button.GetComponentInChildren<TextMeshProUGUI>().text = lockValue;
         }
     }
+    private void Initialization()
+    {
+        button = canvasObject.GetComponentInChildren<Button>();
+        GameManager.Instance.OnMoneyCollectedUpdated.AddListener(CheckUnlockCondition);
+        button.onClick.AddListener(() =>
+        {
+            UnlockCity();
+        });
+    }
+
     public void LoadData(GameData data)
     {
         gameData = data;
@@ -93,17 +103,7 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
             }
         }
     }
-
-    private void Initialization()
-    {
-        button = canvasObject.GetComponentInChildren<Button>();
-        GameManager.Instance.OnMoneyCollectedUpdated.AddListener(CheckUnlockCondition);
-        button.onClick.AddListener(() => 
-        {
-            UnlockCity();
-        });
-    }
-
+    
     public void SaveData(ref GameData data)
     {
         if(!data.IsCityLocked.ContainsKey(gameObject))

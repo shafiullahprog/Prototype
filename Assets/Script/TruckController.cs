@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,20 +8,27 @@ public class TruckController : MonoBehaviour
     public UnityAction<int> OnGarbageCollect;
     Transform wayPointsParent;
     Vector3 initialPos;
+    Transform child;
 
-    [SerializeField] List<GameObject> waypoints = new List<GameObject>();
+    List<GameObject> waypoints = new List<GameObject>();
     [SerializeField] string GarbageAppartmentName = "TruckStop";
     [SerializeField] string truckPathParentName = "TruckPath";
+    
+    [SerializeField] LayerMask vehicleLayerMask;
+    
+    [SerializeField] float range = 2;
     [SerializeField] private float speed = 1;
+    [SerializeField] float waitTime;
 
     int index = 0;
-    [SerializeField] int IgarbageCollected = 0;
+    int IgarbageCollected = 0;
 
     public bool IsMoving = false;
     public bool IsTruckFull = false;
 
     public void Start()
     {
+        child = transform.GetChild(1);
         initialPos = transform.position;
         wayPointsParent = GameObject.Find(truckPathParentName).transform;
         if (wayPointsParent != null)
@@ -59,8 +67,6 @@ public class TruckController : MonoBehaviour
         }
     }
 
-    [SerializeField] LayerMask vehicleLayerMask;
-    [SerializeField] float range = 2;
     private void CheckRaycast()
     {
         RaycastHit hit;
@@ -70,11 +76,11 @@ public class TruckController : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * range, Color.red);
             IsMoving = false;
         }
-        else
+       /* else
         {
             if(!IsMoving)
                 IsMoving = true;
-        }
+        }*/
     }
 
     public void ResetTruckMode()
@@ -94,25 +100,33 @@ public class TruckController : MonoBehaviour
             {
                 IgarbageCollected = 1;
                 OnGarbageCollect?.Invoke(0);
+                PlayGarbageCollectionAnimation(child, garbage);
                 HaltTruck(true, false);
             }
         }
-        else if (other.CompareTag("Factory") && IsTruckFull)
+        else if(other.CompareTag("Factory") && IsTruckFull)
         {
             GarbageController.Instance.DeliverGarbage(IgarbageCollected);
             IgarbageCollected = 0;
             HaltTruck(false, false);
         }
     }
+
+    void PlayGarbageCollectionAnimation(Transform targetChildObject, GarbageStatus garbageStatus)
+    {
+        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().targetTransform = targetChildObject;
+        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().MoveObjectToTargetInSequence();
+    }
     private void HaltTruck(bool val1, bool val2)
     {
         IsTruckFull = val1;
         IsMoving = val2;
-        Invoke("StartAgain", 2f);
+        Invoke("StartAgain", waitTime);
     }
 
     public void StartAgain()
     {
+        Debug.Log("Start Again");
         IsMoving = true;
     }   
 }

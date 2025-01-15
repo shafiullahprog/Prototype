@@ -1,36 +1,56 @@
 using DG.Tweening;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectionAnimation : MonoBehaviour
 {
+    List<Transform> noofGarbages = new List<Transform>();
     public Transform targetTransform;
-    public float animationDuration = 1.5f;
     public Ease easeType = Ease.OutQuad;
-    public System.Action onCompleteCallback;
+    public Action<Transform> onCompleteCallback;
+    [SerializeField] private float spacing;
 
-    public void MoveObjectToTarget(Transform objectTransform)
+    private void Start()
     {
-        if (targetTransform == null)
+        foreach (Transform t in transform)
         {
-            Debug.LogWarning("Target Transform is not set.");
-            return;
+            noofGarbages.Add(t);
         }
+    }
 
-        // Animate the object's position to the target's position
-        objectTransform.DOMove(targetTransform.position, animationDuration)
+    public float animationDuration = 0.5f;
+    [SerializeField]int row = 0;
+    [SerializeField] int column = 0;
+    public void MoveObjectToTargetInSequence()
+    {
+        Sequence mySequence = DOTween.Sequence();
+        foreach (Transform t in noofGarbages)
+        {
+            Vector3 newPos = GetPosition(row, column);
+            column++;
+
+            if (column > 3)
+            {
+                column = 0;
+                row++;
+            }
+            mySequence.Append(t.DOMove(newPos, animationDuration)
             .SetEase(easeType)
             .OnComplete(() =>
             {
-                // Callback on completion
-                onCompleteCallback?.Invoke();
-            });
+                onCompleteCallback?.Invoke(t);
+            }));
+        }
     }
 
-    // Optional: Set the target dynamically
-    public void SetTarget(Transform newTarget)
+    private Vector3 GetPosition(int row, int column)
     {
-        targetTransform = newTarget;
+        Vector3 startOffset = Vector3.zero;
+        if (column < 3 && row <= 5)
+        {
+           startOffset = new Vector3(column * spacing, 0, row * spacing);
+        }
+        return targetTransform.position + startOffset;
     }
 }

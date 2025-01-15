@@ -4,6 +4,7 @@ using UnityEngine.Events;
 
 public class GarbageStatus : MonoBehaviour, IDataPersistence
 {
+    [SerializeField] Transform child;
     GameData gameData;
     public List<GameObject> garbagePresent = new List<GameObject>();
     public List<GameObject> GetTotalGarbagePresent()
@@ -37,6 +38,7 @@ public class GarbageStatus : MonoBehaviour, IDataPersistence
     public void Collected(int index) 
     {
         GarbageController.Instance.CollectGarbage(garbagePresent[index]);
+
         garbagePresent.Remove(garbagePresent[index]);
     }
 

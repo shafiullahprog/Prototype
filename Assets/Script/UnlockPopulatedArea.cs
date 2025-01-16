@@ -79,7 +79,8 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
 
     public void LoadData(GameData data)
     {
-        gameData = data;
+        Initialization();
+        /*gameData = data;
         Initialization();
 
         foreach (KeyValuePair<GameObject, bool> isCityUnlock in data.IsCityLocked)
@@ -101,12 +102,12 @@ public class UnlockPopulatedArea : MonoBehaviour, IDataPersistence
                 if (objectToEnable != null)
                     objectToEnable.SetActive(!isUnlocked);
             }
-        }
+        }*/
     }
     
     public void SaveData(ref GameData data)
     {
-        if(!data.IsCityLocked.ContainsKey(gameObject))
-            data.IsCityLocked.Add(gameObject, isUnlocked);
+    //    if (!data.IsCityLocked.ContainsKey(gameObject))
+    //        data.IsCityLocked.Add(gameObject, isUnlocked);
     }
 }

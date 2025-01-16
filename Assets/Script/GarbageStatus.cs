@@ -38,7 +38,6 @@ public class GarbageStatus : MonoBehaviour, IDataPersistence
     public void Collected(int index) 
     {
         GarbageController.Instance.CollectGarbage(garbagePresent[index]);
-
         garbagePresent.Remove(garbagePresent[index]);
     }
 

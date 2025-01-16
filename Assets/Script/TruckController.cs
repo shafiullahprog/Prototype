@@ -76,11 +76,6 @@ public class TruckController : MonoBehaviour
             Debug.DrawRay(transform.position, transform.forward * range, Color.red);
             IsMoving = false;
         }
-       /* else
-        {
-            if(!IsMoving)
-                IsMoving = true;
-        }*/
     }
 
     public void ResetTruckMode()
@@ -99,9 +94,10 @@ public class TruckController : MonoBehaviour
             if (garbage.GetTotalGarbagePresent().Count > 0)
             {
                 IgarbageCollected = 1;
-                OnGarbageCollect?.Invoke(0);
                 PlayGarbageCollectionAnimation(child, garbage);
                 HaltTruck(true, false);
+
+                OnGarbageCollect?.Invoke(0);
             }
         }
         else if(other.CompareTag("Factory") && IsTruckFull)

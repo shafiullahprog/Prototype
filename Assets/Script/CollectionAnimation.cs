@@ -24,6 +24,7 @@ public class CollectionAnimation : MonoBehaviour
     [SerializeField] int column = 0;
     public void MoveObjectToTargetInSequence()
     {
+        //transform.SetParent(setParentObject);
         Sequence mySequence = DOTween.Sequence();
         foreach (Transform t in noofGarbages)
         {
@@ -39,6 +40,7 @@ public class CollectionAnimation : MonoBehaviour
             .SetEase(easeType)
             .OnComplete(() =>
             {
+                //t.transform.SetParent(setParentObject);
                 onCompleteCallback?.Invoke(t);
             }));
         }
@@ -49,7 +51,7 @@ public class CollectionAnimation : MonoBehaviour
         Vector3 startOffset = Vector3.zero;
         if (column < 3 && row <= 5)
         {
-           startOffset = new Vector3(column * spacing, 0, row * spacing);
+           startOffset = new Vector3(column * spacing, 0, -row * spacing);
         }
         return targetTransform.position + startOffset;
     }

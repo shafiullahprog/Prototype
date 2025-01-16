@@ -5,6 +5,7 @@ using static UnityEngine.GraphicsBuffer;
 public class TruckSpawner : MonoBehaviour
 {
     [SerializeField] Button spawnButton;
+    [SerializeField] float enableTimer;
     private void Start()
     {
         spawnButton.onClick.AddListener(() =>
@@ -25,7 +26,7 @@ public class TruckSpawner : MonoBehaviour
         truck.GetComponent<TruckController>().IsMoving = true;
         spawnButton.interactable = false;
 
-        Invoke("EnableButtonInteraction", 4f);
+        Invoke("EnableButtonInteraction", enableTimer);
     }
 
     void EnableButtonInteraction()

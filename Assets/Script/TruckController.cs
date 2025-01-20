@@ -102,6 +102,7 @@ public class TruckController : MonoBehaviour
         }
         else if(other.CompareTag("Factory") && IsTruckFull)
         {
+            //PutGarbageInFacotry(other.)
             GarbageController.Instance.DeliverGarbage(IgarbageCollected);
             IgarbageCollected = 0;
             HaltTruck(false, false);
@@ -110,8 +111,13 @@ public class TruckController : MonoBehaviour
 
     void PlayGarbageCollectionAnimation(Transform targetChildObject, GarbageStatus garbageStatus)
     {
-        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().targetTransform = targetChildObject;
-        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().MoveObjectToTargetInSequence();
+        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().truckTargetTransform = targetChildObject;
+        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().MoveGarbageToTruck();
+    }
+
+    void PutGarbageInFacotry(GarbageStatus garbageStatus)
+    {
+        garbageStatus.garbagePresent[0].GetComponent<CollectionAnimation>().MoveGarbageToFactory();
     }
     private void HaltTruck(bool val1, bool val2)
     {

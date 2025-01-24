@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CollectionAnimation : MonoBehaviour
 {
-    List<Transform> noofGarbages = new List<Transform>();
+    public List<Transform> noofGarbages = new List<Transform>();
     public Transform truckTargetTransform, factoryTransform;
     public Ease easeType = Ease.OutQuad;
     public Action<Transform> onCompleteCallback;
@@ -28,7 +28,7 @@ public class CollectionAnimation : MonoBehaviour
         Sequence mySequence = DOTween.Sequence();
         foreach (Transform t in noofGarbages)
         {
-            SetTruckAsParentParent(t, truckTargetTransform);
+            SetGarbageParent(t, truckTargetTransform);
             Vector3 newPos = GetPosition(row, column);
             column++;
 
@@ -44,6 +44,8 @@ public class CollectionAnimation : MonoBehaviour
                 onCompleteCallback?.Invoke(t);
             }));
         }
+        SetGarbageParent(transform, truckTargetTransform);
+        transform.GetComponent<BoxCollider>().enabled = false;
     }
 
     public void MoveGarbageToFactory()
@@ -51,7 +53,7 @@ public class CollectionAnimation : MonoBehaviour
         Sequence mySequence = DOTween.Sequence();
         foreach (Transform t in noofGarbages)
         {
-            SetTruckAsParentParent(t, factoryTransform);
+            SetGarbageParent(t, factoryTransform);
             mySequence.Append(t.DOMove(factoryTransform.position, animationDuration)
             .SetEase(easeType)
             .OnComplete(() =>
@@ -61,7 +63,7 @@ public class CollectionAnimation : MonoBehaviour
         }
     }
 
-    void SetTruckAsParentParent(Transform transform,Transform target)
+    void SetGarbageParent(Transform transform,Transform target)
     {
         transform.SetParent(target);
     }
